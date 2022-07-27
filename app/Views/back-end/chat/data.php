@@ -23,16 +23,15 @@
                   <div class="card-body" style="overflow-y: scroll; height: 350px;">
                     <ul class="list-unstyled list-unstyled-border">
                     <?php foreach ($chatList as $c) { ?>
-                      <?php if ($c['sender_id'] != session('id')) { ?>
                       <li class="media">
-                        <img alt="image" class="mr-3 rounded-circle" width="50" src="<?= site_url('/img/avatar/'.$c['image'])?>" onclick="list('<?= $c['sender_id'] ?>')">
+                        <img alt="image" class="mr-3 rounded-circle" width="50" src="<?= site_url('/img/avatar/'.$c['image'])?>" onclick="list('<?= $c['room_number'] ?>')">
                         <div class="media-body">
-                          <div class="mt-0 mb-1 font-weight-bold" onclick="list('<?= $c['sender_id'] ?>')"><?= $c['first_name']?> <?= $c['last_name']?></div>
+                          <div class="mt-0 mb-1 font-weight-bold" onclick="list('<?= $c['room_number'] ?>')"><?= $c['first_name']?> <?= $c['last_name']?></div>
                           <div class="row">
                             <?php if ($c['is_read'] == 0) { ?>
-                              <p class="chat-text col-sm-8" onclick="list('<?= $c['sender_id'] ?>')"><b><?= word_limiter($c['message'], 5)?></b></p>
+                              <p class="chat-text col-sm-8" onclick="list('<?= $c['room_number'] ?>')"><b><?= word_limiter($c['message'], 5)?></b></p>
                             <?php } else if ($c['is_read'] == 1) { ?>
-                              <p class="chat-text col-sm-8" onclick="list('<?= $c['sender_id'] ?>')"><?= word_limiter($c['message'], 5)?></p>
+                              <p class="chat-text col-sm-8" onclick="list('<?= $c['room_number'] ?>')"><?= word_limiter($c['message'], 5)?></p>
                             <?php } ?>
                             <p class="chat-time text-secondary col-sm-4" style="font-size: 12px;"><?= date('H:i', strtotime($c['time'])) ?></p>
                             <?php if ($c['status'] == 'online') { ?>
@@ -43,7 +42,6 @@
                           </div>
                         </div>
                       </li>
-                      <?php } ?>
                     <?php } ?>
                     </ul>
                   </div>
@@ -72,7 +70,7 @@ function list(id)
   $.ajax({
     url: "<?= site_url('list')?>",
     dataType: "json",
-    data: { sender_id : id },
+    data: { room_number : id },
     success: function(response) {
       if(response.data){
         $('#viewMessage').html(response.data).show();

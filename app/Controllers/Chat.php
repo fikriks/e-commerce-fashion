@@ -24,22 +24,42 @@ class Chat extends BaseController
             // 'chat'  => $this->room->getAll(),
             'chatList'  => $this->chat->getList(),
         ];
-
-        // dd($chat_admin = $this->room->getAll());
-
+        
         return view('back-end/chat/data', $data);
     }
 
     public function list()
     {
-        // if ($this->request->isAJAX()) {
-            $sender_id = $this->request->getVar('sender_id');
+        if ($this->request->isAJAX()) {
+            $room_number = $this->request->getVar('room_number');
+
+            $user = $this->chat->join('user', 'user.id = message.user_id')
+                    ->where('room_number', $room_number)->first();
+            $chat = $this->chat->join('user', 'user.id = message.user_id')
+                    ->where('room_number', $room_number)->findAll();
+
+             $msg = [
+                'data' => view('back-end/chat/content', [
+                        'user' => $user,
+                        'chat' => $chat
+                ])
+            ];
+
+            echo json_encode($msg);
+
+            // return view('back-end/chat/content', [
+            //     'user' => $user,
+            //     'chat' => $chat
+            // ]);
+            
+
+            // $sender_id = $this->request->getVar('sender_id');
 
             // $chat = $this->chat->find($sender_id);
             // $user = $this->user->find($sender_id);
             
             // $user_admin = $this->user->find(session('id'));
-            $chat_admin = $this->room->getAll();
+            // $chat_admin = $this->room->getAll();
 
 
             // $data = [
@@ -60,10 +80,10 @@ class Chat extends BaseController
             //     'data' => view('back-end/chat/content', $chat_admin)
             // ];
 
-            var_dump($chat_admin[0]['message']);
+            // var_dump($chat_admin[0]['message']);
             // dd($data);
-            // json_encode($msg);
-        // }
+            // echo json_encode($this->request->getVar('room_number'));
+        }
     }
 
     public function send()

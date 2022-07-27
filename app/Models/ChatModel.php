@@ -22,12 +22,12 @@ class ChatModel extends Model
 
     function getList()
     {
-        $builder = $this->db->table('message');
-        $builder->join('user', 'user.id = message.sender_id');
-        $builder->where('sender_id != 1');
-        $builder->groupBy('first_name');
-        $builder->orderBy('time', 'DESC');
+        $builder = $this->db->table('message_latest');
+        $builder->join('message', 'message.id = message_latest.message_id');
+        $builder->join('user', 'user.id = message.user_id');
+        
         $query = $builder->get();
+
         return $query->getResultArray();
     }
 }
